@@ -1,0 +1,41 @@
+---
+
+- name: Download prometheus
+  unarchive: creates=/opt/prometheus copy=no src=https://github.com/prometheus/prometheus/releases/download/v{{ PROMETHEUS_VERSION }}/prometheus-{{ PROMETHEUS_VERSION }}.linux-{{ PROMETHEUS_ARCH }}.tar.gz dest=/opt
+  
+- name: Create symlink
+  file: src=/opt/prometheus-{{ PROMETHEUS_VERSION }}.linux-{{ PROMETHEUS_ARCH }} dest=/opt/prometheus state=link
+
+- name: Create prometheus directories
+  file:
+    state: directory
+    path: "{{ item.path }}"
+    owner: "{{ item.user }}"
+    group: "{{ item.group }}"
+    mode: "{{ item.mode }}"
+  with_items:
+    - { path: "/var/lib/prometheus", mode: "0755", user: "root", group: "root" }
+    - { path: "/etc/prometheus", mode: "0770", user: "root", group: "root" }
+    - { path: "/etc/prometheus/rules", mode: "0770", user: "root", group: "root" }
+
+- name: Copy prometheus files
+  template:
+    src: "{{ item.source }}"
+    dest: "{{ item.destination }}"
+    owner: "{{ item.user }}"
+    group: "{{ item.group }}"
+    mode: "{{ item.mode }}"
+    force: true
+  with_items:
+    - { source: "etc/systemd/system/prometheus.service.j2", destination: "/etc/systemd/system/prometheus.service", mode: "0644", user: "root", group: "root"}
+    - { source: "etc/prometheus/prometheus.yml.j2", destination: "/etc/prometheus/prometheus.yml", mode: "0644", user: "root", group: "root"}
+    - { source: "etc/prometheus/rules/rules.yml.j2", destination: "/etc/prometheus/rules/rules.yml", mode: "0640", user: "root", group: "root"}
+  notify:
+    - restart prometheus
+
+- name: Start prometheus
+  systemd:
+    daemon_reload: true
+    name: prometheus
+    state: started
+    enabled: true

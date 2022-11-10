@@ -1,0 +1,14 @@
+---
+
+- name: Install grafana
+  yum:
+    name: https://dl.grafana.com/enterprise/release/grafana-enterprise-{{ GRAFANA_VERSION }}.{{ GRAFANA_ARCH }}.rpm
+    state: present
+  notify:
+    - restart grafana
+
+- name: Ensure grafana is running
+  service:
+    name: grafana-server
+    enabled: yes
+    state: started

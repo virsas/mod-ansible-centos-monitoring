@@ -1,0 +1,47 @@
+---
+# Rewritable vars
+
+GRAFANA_VERSION: "8.4.2-1"
+GRAFANA_ARCH: "aarch64"
+
+PROMETHEUS_VERSION: "2.33.4"
+PROMETHEUS_ARCH: "arm64"
+PROMETHEUS_IP: "0.0.0.0"
+PROMETHEUS_PORT: "9090"
+PROMETHEUS_URL: "http://localhost"
+PROMETHEUS_RETENTION_TIME: "30d"
+PROMETHEUS_RETENTION_SIZE: "0"
+PROMETHEUS_INTERVAL: "60s"
+PROMETHEUS_JOBS:
+  -
+    name: node_exporter
+    scheme: http
+    path: /metrics
+    targets:
+      - { name: node_exporter, targets: ['10.0.0.4:9100'] }
+  -
+    name: golang
+    scheme: http
+    path: /metrics
+    targets:
+      - { name: service_one, targets: ['10.0.0.4:2001', '10.0.0.5:2001'] }
+      - { name: service_two, targets: ['10.0.0.4:2002', '10.0.0.5:2002'] }
+PROMETHEUS_RULES:
+  - { name: "exporter_down", condition: "up == 0", duration: "5m", severity: "major", summary: "Exporter down" }
+
+ALERTMANAGER_VERSION: "0.23.0"
+ALERTMANAGER_ARCH: "arm64"
+ALERTMANAGER_IP: "127.0.0.1"
+ALERTMANAGER_PORT: "9093"
+ALERTMANAGER_URL: "http://localhost"
+ALERTMANAGER_EMAIL_HOST: "smtp.gmail.com"
+ALERTMANAGER_EMAIL_PORT: "587"
+ALERTMANAGER_EMAIL_USER: ""
+ALERTMANAGER_EMAIL_PASS: ""
+ALERTMANAGER_EMAIL_TLS: true
+ALERTMANAGER_EMAIL_FROM: "alertmanager@localhost"
+ALERTMANAGER_EMAIL_TO: "root@localhost"
+ALERTMANAGER_TIMEOUT: "5m"
+ALERTMANAGER_INTERVAL: "1m"
+ALERTMANAGER_WAIT: "2m"
+ALERTMANAGER_REPEAT: "24h"

@@ -1,0 +1,18 @@
+global:
+    resolve_timeout: {{ ALERTMANAGER_TIMEOUT }}
+    smtp_smarthost: {{ ALERTMANAGER_EMAIL_HOST }}:{{ ALERTMANAGER_EMAIL_PORT }}
+    smtp_from: {{ ALERTMANAGER_EMAIL_FROM }}
+    smtp_auth_username: {{ ALERTMANAGER_EMAIL_USER }}
+    smtp_auth_password: {{ ALERTMANAGER_EMAIL_PASS }}
+    smtp_require_tls: {{ ALERTMANAGER_EMAIL_TLS }}
+receivers:
+- name: email
+  email_configs:
+  - to: {{ ALERTMANAGER_EMAIL_TO }}
+route:
+  receiver: email
+  group_wait: {{ ALERTMANAGER_WAIT }}
+  group_interval: {{ ALERTMANAGER_INTERVAL }}
+  repeat_interval: {{ ALERTMANAGER_REPEAT }}
+  group_by:
+    - alertname

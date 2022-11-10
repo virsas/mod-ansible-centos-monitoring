@@ -1,0 +1,32 @@
+[Unit]
+Description=Prometheus
+After=network-online.target
+
+[Service]
+Type=simple
+Environment="GOMAXPROCS=4"
+User=root
+Group=root
+ExecReload=/bin/kill -HUP $MAINPID
+ExecStart=/opt/prometheus/prometheus \
+  --config.file=/etc/prometheus/prometheus.yml \
+  --storage.tsdb.path=/var/lib/prometheus \
+  --storage.tsdb.retention.time={{ PROMETHEUS_RETENTION_TIME }} \
+  --storage.tsdb.retention.size={{ PROMETHEUS_RETENTION_SIZE }} \
+  --web.console.libraries=/opt/prometheus/console_libraries \
+  --web.console.templates=/opt/prometheus/consoles \
+  --web.listen-address={{ PROMETHEUS_IP }}:{{ PROMETHEUS_PORT }} \
+  --web.external-url={{ PROMETHEUS_URL }}:{{ PROMETHEUS_PORT }}/
+
+LimitNOFILE=65000
+NoNewPrivileges=true
+PrivateDevices=true
+PrivateTmp=true
+ProtectHome=true
+
+SyslogIdentifier=prometheus
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

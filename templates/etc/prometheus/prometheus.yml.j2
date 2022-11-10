@@ -1,0 +1,25 @@
+global:
+  scrape_interval:     {{ PROMETHEUS_INTERVAL }}
+  evaluation_interval: {{ PROMETHEUS_INTERVAL }}
+  
+alerting:
+  alertmanagers:
+  - static_configs:
+    - targets:
+      - {{ ALERTMANAGER_IP }}:{{ ALERTMANAGER_PORT }}
+  
+rule_files:
+  - /etc/prometheus/rules/*.yml
+
+scrape_configs:
+{% for job in PROMETHEUS_JOBS %}
+  - job_name: {{ job.name }}
+    scheme: {{ job.scheme }}
+    metrics_path: {{ job.path }}
+    static_configs:
+{% for target in job.targets %}
+      - targets: {{ target.targets }}
+        labels:
+          name: {{ target.name }}
+{% endfor %}
+{% endfor %}

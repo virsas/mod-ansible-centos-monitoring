@@ -1,0 +1,21 @@
+---
+# Handlers
+
+- name: restart grafana
+  systemd:
+    daemon_reload: true
+    name: grafana-server
+    state: restarted
+
+- name: restart prometheus
+  systemd:
+    daemon_reload: true
+    name: prometheus
+    state: restarted
+
+- name: restart alertmanager
+  become: true
+  systemd:
+    daemon_reload: true
+    name: alertmanager
+    state: restarted

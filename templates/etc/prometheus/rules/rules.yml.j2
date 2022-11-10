@@ -1,0 +1,12 @@
+groups:
+  - name: exporter
+    rules:
+{% for rule in PROMETHEUS_RULES %}
+      - alert: {{ rule.name }}
+        expr: {{ rule.condition }}
+        for: {{ rule.duration }}
+        labels:
+          severity: {{ rule.severity }}
+        annotations:
+          summary: {{ rule.summary }}
+{% endfor %}

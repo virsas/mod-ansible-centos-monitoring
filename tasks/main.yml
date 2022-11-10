@@ -1,0 +1,6 @@
+---
+# tasks file for common
+
+- include: grafana.yml
+- include: prometheus.yml
+- include: alertmanager.yml

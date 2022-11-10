@@ -1,0 +1,38 @@
+---
+- name: Download alertmanager
+  unarchive: creates=/opt/alertmanager copy=no src=https://github.com/prometheus/alertmanager/releases/download/v{{ ALERTMANAGER_VERSION }}/alertmanager-{{ ALERTMANAGER_VERSION }}.linux-{{ ALERTMANAGER_ARCH }}.tar.gz dest=/opt
+
+- name: Create symlink
+  file: src=/opt/alertmanager-{{ ALERTMANAGER_VERSION }}.linux-{{ ALERTMANAGER_ARCH }} dest=/opt/alertmanager state=link
+
+- name: Create alertmanager directories
+  file:
+    state: directory
+    path: "{{ item.path }}"
+    owner: "{{ item.user }}"
+    group: "{{ item.group }}"
+    mode: "{{ item.mode }}"
+  with_items:
+    - { path: "/etc/alertmanager", mode: "0755", user: "root", group: "root" }
+    - { path: "/var/lib/alertmanager", mode: "0775", user: "root", group: "root" }
+
+- name: Copy alertmanager files
+  template:
+    src: "{{ item.source }}"
+    dest: "{{ item.destination }}"
+    owner: "{{ item.user }}"
+    group: "{{ item.group }}"
+    mode: "{{ item.mode }}"
+    force: true
+  with_items:
+    - { source: "etc/systemd/system/alertmanager.service.j2", destination: "/etc/systemd/system/alertmanager.service", mode: "0644", user: "root", group: "root"}
+    - { source: "etc/alertmanager/alertmanager.yml.j2", destination: "/etc/alertmanager/alertmanager.yml", mode: "0640", user: "root", group: "root"}
+  notify:
+    - restart alertmanager
+
+- name: Start alertmanager
+  systemd:
+    daemon_reload: true
+    name: alertmanager
+    state: started
+    enabled: true
