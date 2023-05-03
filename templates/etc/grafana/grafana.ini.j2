@@ -1,0 +1,21 @@
+#################################### Server ####################################
+[server]
+protocol = {{ GRAFANA_PROTOCOL }}
+http_port = {{ GRAFANA_PORT }}
+
+#################################### Analytics ####################################
+[analytics]
+reporting_enabled = false
+check_for_updates = false
+check_for_plugin_updates = false
+
+#################################### Security ####################################
+[security]
+admin_user = {{ GRAFANA_ADMIN_USER }}
+admin_password = {{ GRAFANA_ADMIN_PASS }}
+admin_email = {{ GRAFANA_ADMIN_EMAIL }}
+
+#################################### Users ###############################
+[users]
+allow_sign_up = false
+allow_org_create =false

@@ -131,6 +131,12 @@ ansible-playbook -i sites/NAME/inventory playbooks/monitoring.yml --diff
 GRAFANA_VERSION: "8.4.2-1"
 GRAFANA_ARCH: "aarch64"
 
+GRAFANA_PROTOCOL: "http"
+GRAFANA_PORT: "3000"
+GRAFANA_ADMIN_USER: "admin"
+GRAFANA_ADMIN_PASS: "admin"
+GRAFANA_ADMIN_EMAIL: "system@example.org"
+
 PROMETHEUS_VERSION: "2.33.4"
 PROMETHEUS_ARCH: "arm64"
 PROMETHEUS_IP: "0.0.0.0"

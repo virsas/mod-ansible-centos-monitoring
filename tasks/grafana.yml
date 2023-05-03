@@ -12,3 +12,16 @@
     name: grafana-server
     enabled: yes
     state: started
+
+- name: Copy grafana files
+  template:
+    src: "{{ item.source }}"
+    dest: "{{ item.destination }}"
+    owner: "{{ item.user }}"
+    group: "{{ item.group }}"
+    mode: "{{ item.mode }}"
+    force: true
+  with_items:
+    - { source: "etc/grafana/grafana.ini.j2", destination: "/etc/grafana/grafana.ini", mode: "0600", user: "root", group: "root"}
+  notify:
+    - restart grafana
