@@ -18,7 +18,7 @@ touch requirements/monitoring.yml
 # ansible-galaxy install -p vss_galaxy_roles --force -r requirements/monitoring.yml
 - src: "https://github.com/virsas/mod-ansible-rpm-monitoring"
   scm: git
-  version: v1.2.0
+  version: v1.3.0
   name: monitoring
   path: vss_galaxy_roles
 ```
@@ -186,4 +186,6 @@ ALERTMANAGER_REPEAT: "24h"
 ``` yml
 # If you specify PROMETHEUS_STORAGE, the device will be formatted to ext4 and mounted to /var/lib/prometheus for data scraping
 PROMETHEUS_STORAGE: "/dev/sdb"
+# If you specify GRAFANA_STORAGE, the device will be formatted to ext4 and mounted to /var/lib/grafana for sqlite database
+GRAFANA_STORAGE: "/dev/sdc"
 ```

@@ -7,6 +7,32 @@
   notify:
     - restart grafana
 
+- name: Create grafana directories
+  file:
+    state: directory
+    path: "{{ item.path }}"
+    owner: "{{ item.user }}"
+    group: "{{ item.group }}"
+    mode: "{{ item.mode }}"
+  with_items:
+    - { path: "/var/lib/grafana", mode: "0755", user: "grafana", group: "grafana" }
+
+- name: Create an ext4 filesystem on {{ GRAFANA_STORAGE }}
+  filesystem:
+    fstype: ext4
+    state: present
+    dev: "{{ GRAFANA_STORAGE }}"
+  when: GRAFANA_STORAGE is defined
+
+- name: Mount {{ GRAFANA_STORAGE }} to /var/lib/grafana/
+  mount:
+    path: /var/lib/grafana
+    src: "{{ GRAFANA_STORAGE }}"
+    fstype: ext4
+    opts: defaults
+    state: mounted
+  when: GRAFANA_STORAGE is defined
+
 - name: Copy grafana files
   template:
     src: "{{ item.source }}"
