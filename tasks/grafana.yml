@@ -7,16 +7,6 @@
   notify:
     - restart grafana
 
-- name: Create grafana directories
-  file:
-    state: directory
-    path: "{{ item.path }}"
-    owner: "{{ item.user }}"
-    group: "{{ item.group }}"
-    mode: "{{ item.mode }}"
-  with_items:
-    - { path: "/var/lib/grafana", mode: "0755", user: "grafana", group: "grafana" }
-
 - name: Create an ext4 filesystem on {{ GRAFANA_STORAGE }}
   filesystem:
     fstype: ext4
@@ -31,6 +21,15 @@
     fstype: ext4
     opts: defaults
     state: mounted
+  when: GRAFANA_STORAGE is defined
+
+- name: Make sure of correct ownership
+  file:
+    state: directory
+    path: "/var/lib/grafana"
+    owner: grafana
+    group: grafana
+    mode: "0755"
   when: GRAFANA_STORAGE is defined
 
 - name: Copy grafana files
