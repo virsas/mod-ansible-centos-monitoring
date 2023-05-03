@@ -18,7 +18,7 @@ touch requirements/monitoring.yml
 # ansible-galaxy install -p vss_galaxy_roles --force -r requirements/monitoring.yml
 - src: "https://github.com/virsas/mod-ansible-rpm-monitoring"
   scm: git
-  version: v1.3.0
+  version: v1.4.0
   name: monitoring
   path: vss_galaxy_roles
 ```
@@ -136,6 +136,9 @@ GRAFANA_PORT: "3000"
 GRAFANA_ADMIN_USER: "admin"
 GRAFANA_ADMIN_PASS: "admin"
 GRAFANA_ADMIN_EMAIL: "system@example.org"
+# allowed options "sqlite3", "postgres", "mysql"
+# see optional configuration in case you choose postgres or mysql
+GRAFANA_DB_TYPE: "sqlite3"
 
 PROMETHEUS_VERSION: "2.33.4"
 PROMETHEUS_ARCH: "arm64"
@@ -188,4 +191,12 @@ ALERTMANAGER_REPEAT: "24h"
 PROMETHEUS_STORAGE: "/dev/sdb"
 # If you specify GRAFANA_STORAGE, the device will be formatted to ext4 and mounted to /var/lib/grafana for sqlite database
 GRAFANA_STORAGE: "/dev/sdc"
+# mysql / postgres
+GRAFANA_DB_HOST: "localhost"
+GRAFANA_DB_PORT: "5432"
+GRAFANA_DB_DATABASE: "grafana"
+GRAFANA_DB_USER: "grafana"
+GRAFANA_DB_PASS: "asdasd"
+# sqlite3
+GRAFANA_DB_PATH: "/var/lib/grafana.db"
 ```

@@ -4,6 +4,14 @@ protocol = {{ GRAFANA_PROTOCOL }}
 http_port = {{ GRAFANA_PORT }}
 
 #################################### Analytics ####################################
+[database]
+type = {{ GRAFANA_DB_TYPE }}
+host = {{ GRAFANA_DB_HOST }}:{{ GRAFANA_DB_PORT }}
+name = {{ GRAFANA_DB_DATABASE }}
+user = {{ GRAFANA_DB_USER }}
+password = {{ GRAFANA_DB_PASS }}
+
+#################################### Analytics ####################################
 [analytics]
 reporting_enabled = false
 check_for_updates = false
