@@ -153,6 +153,7 @@ PROMETHEUS_JOBS:
     targets:
       - { name: service_one, targets: ['10.0.0.4:2001', '10.0.0.5:2001'] }
       - { name: service_two, targets: ['10.0.0.4:2002', '10.0.0.5:2002'] }
+
 PROMETHEUS_RULES:
   - { name: "exporter_down", condition: "up == 0", duration: "5m", severity: "major", summary: "Exporter down" }
 
@@ -172,4 +173,11 @@ ALERTMANAGER_TIMEOUT: "5m"
 ALERTMANAGER_INTERVAL: "1m"
 ALERTMANAGER_WAIT: "2m"
 ALERTMANAGER_REPEAT: "24h"
+```
+
+## Optional variables
+
+``` yml
+# If you specify PROMETHEUS_STORAGE, the device will be formatted to ext4 and mounted to /var/lib/prometheus for data scraping
+PROMETHEUS_STORAGE: "/dev/sdb"
 ```

@@ -2,7 +2,7 @@
 
 - name: Download prometheus
   unarchive: creates=/opt/prometheus copy=no src=https://github.com/prometheus/prometheus/releases/download/v{{ PROMETHEUS_VERSION }}/prometheus-{{ PROMETHEUS_VERSION }}.linux-{{ PROMETHEUS_ARCH }}.tar.gz dest=/opt
-  
+
 - name: Create symlink
   file: src=/opt/prometheus-{{ PROMETHEUS_VERSION }}.linux-{{ PROMETHEUS_ARCH }} dest=/opt/prometheus state=link
 
@@ -17,6 +17,22 @@
     - { path: "/var/lib/prometheus", mode: "0755", user: "root", group: "root" }
     - { path: "/etc/prometheus", mode: "0770", user: "root", group: "root" }
     - { path: "/etc/prometheus/rules", mode: "0770", user: "root", group: "root" }
+
+- name: Create an ext4 filesystem on {{ PROMETHEUS_STORAGE }}
+  filesystem:
+    fstype: ext4
+    state: present
+    dev: "{{ PROMETHEUS_STORAGE }}"
+  when: PROMETHEUS_STORAGE is defined
+
+- name: Mount {{ PROMETHEUS_STORAGE }} to /var/lib/prometheus/
+  mount:
+    path: /var/lib/prometheus
+    src: "{{ PROMETHEUS_STORAGE }}"
+    fstype: ext4
+    opts: defaults
+    state: mounted
+  when: PROMETHEUS_STORAGE is defined
 
 - name: Copy prometheus files
   template:
