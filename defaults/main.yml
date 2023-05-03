@@ -15,7 +15,7 @@ GRAFANA_DB_PORT: "5432"
 GRAFANA_DB_DATABASE: "grafana"
 GRAFANA_DB_USER: "grafana"
 GRAFANA_DB_PASS: "asdasd"
-GRAFANA_DB_PATH: "/var/lib/grafana.db"
+GRAFANA_DB_PATH: "/var/lib/grafana/grafana.db"
 
 PROMETHEUS_VERSION: "2.33.4"
 PROMETHEUS_ARCH: "arm64"
