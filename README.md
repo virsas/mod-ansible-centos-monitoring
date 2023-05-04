@@ -211,4 +211,17 @@ GRAFANA_DB_USER: "grafana"
 GRAFANA_DB_PASS: "asdasd"
 # sqlite3
 GRAFANA_DB_PATH: "/var/lib/grafana.db"
+# additional receivers if used by additional routes
+ALERTMANAGER_ADDITIONAL_RECEIVERS:
+  -
+    name: "frontend_email"
+    type: "email_configs"
+    config:
+      - { key: "to", value: "frontend@example.org" }
+# additional routes for alert manager
+ALERTMANAGER_ADDITIONAL_ROUTES:
+  -
+    receiver: "frontend_email"
+    matchers:
+      - { label: "team", condition: "=~", value: "frontend" }
 ```

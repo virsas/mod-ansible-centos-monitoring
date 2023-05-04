@@ -5,14 +5,39 @@ global:
     smtp_auth_username: {{ ALERTMANAGER_EMAIL_USER }}
     smtp_auth_password: {{ ALERTMANAGER_EMAIL_PASS }}
     smtp_require_tls: {{ ALERTMANAGER_EMAIL_TLS }}
+
 receivers:
-- name: email
+- name: default-receiver
   email_configs:
   - to: {{ ALERTMANAGER_EMAIL_TO }}
+{% for receiver in ALERTMANAGER_ADDITIONAL_RECEIVERS %}
+- name: {{ receiver.name }}
+  {{ receiver.type }}:
+{% for config in receiver.config %}
+{% if loop.index == 1 %}
+  - {{ config.key }}: {{ config.value }}
+{% else %}
+    {{ config.key }}: {{ config.value }}
+{% endif %}
+{% endfor %}
+{% endfor %}
+
 route:
-  receiver: email
+  receiver: default-receiver
   group_wait: {{ ALERTMANAGER_WAIT }}
   group_interval: {{ ALERTMANAGER_INTERVAL }}
   repeat_interval: {{ ALERTMANAGER_REPEAT }}
   group_by:
     - alertname
+    - team
+    - service
+{% if ALERTMANAGER_ADDITIONAL_ROUTES|length >= 1 %}
+  routes:
+{% for route in ALERTMANAGER_ADDITIONAL_ROUTES %}
+  - receiver: route.receiver
+    matcher:
+{% for matcher in route.matchers %}
+    - {{ matcher.label }}{{ matcher.condition }}"{{ matcher.value }}"
+{% endfor %}
+{% endfor %}
+{% endif %}
