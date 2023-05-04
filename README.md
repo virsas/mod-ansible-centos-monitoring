@@ -18,7 +18,7 @@ touch requirements/monitoring.yml
 # ansible-galaxy install -p vss_galaxy_roles --force -r requirements/monitoring.yml
 - src: "https://github.com/virsas/mod-ansible-rpm-monitoring"
   scm: git
-  version: v1.5.0
+  version: v1.6.0
   name: monitoring
   path: vss_galaxy_roles
 ```
