@@ -32,7 +32,7 @@
     mode: "0755"
   when: GRAFANA_STORAGE is defined
 
-- name: Copy grafana files
+- name: Copy grafana configuration (might contain sensitive data)
   template:
     src: "{{ item.source }}"
     dest: "{{ item.destination }}"
@@ -44,6 +44,7 @@
     - { source: "etc/grafana/grafana.ini.j2", destination: "/etc/grafana/grafana.ini", mode: "0644", user: "root", group: "root"}
   notify:
     - restart grafana
+  no_log: True
 
 - name: Ensure grafana is running
   service:
