@@ -1,12 +1,20 @@
 groups:
-  - name: exporter
+{% for group in PROMETHEUS_RULES %}
+  - name: {{ group.group }}
     rules:
-{% for rule in PROMETHEUS_RULES %}
-      - alert: {{ rule.name }}
+{% for rule in group.rules %}
+      - alert: {{ rule.alert }}
         expr: {{ rule.condition }}
         for: {{ rule.duration }}
         labels:
           severity: {{ rule.severity }}
+{% for label in rule.labels %}
+          {{ label.key }}: {{ label.value }}
+{% endfor %}
         annotations:
-          summary: {{ rule.summary }}
+          description: {{ rule.description }}
+{% for annotation in rule.annotations %}
+          {{ annotation.key }}: {{ annotation.value }}
+{% endfor %}
+{% endfor %}
 {% endfor %}

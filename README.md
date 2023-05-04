@@ -18,7 +18,7 @@ touch requirements/monitoring.yml
 # ansible-galaxy install -p vss_galaxy_roles --force -r requirements/monitoring.yml
 - src: "https://github.com/virsas/mod-ansible-rpm-monitoring"
   scm: git
-  version: v1.4.0
+  version: v1.5.0
   name: monitoring
   path: vss_galaxy_roles
 ```
@@ -164,7 +164,29 @@ PROMETHEUS_JOBS:
       - { name: service_two, targets: ['10.0.0.4:2002', '10.0.0.5:2002'] }
 
 PROMETHEUS_RULES:
-  - { name: "exporter_down", condition: "up == 0", duration: "5m", severity: "major", summary: "Exporter down" }
+  - {
+      group: "exporter", rules: [
+        {
+          alert: "exporter_down",
+          description: "Exporter down",
+          severity: "major",
+          condition: "up == 0",
+          duration: "5m",
+          labels: [
+            {
+              key: "team",
+              value: "sysops"
+            }
+          ],
+          annotations: [
+            {
+              key: "grafana",
+              value: "https://grafana.example.org:3000/d/abcdefghij/node-exporter-full?orgId=1"
+            }
+          ]
+        }
+      ]
+    }
 
 ALERTMANAGER_VERSION: "0.23.0"
 ALERTMANAGER_ARCH: "arm64"
