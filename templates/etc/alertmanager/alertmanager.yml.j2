@@ -34,7 +34,7 @@ route:
 {% if ALERTMANAGER_ADDITIONAL_ROUTES|length >= 1 %}
   routes:
 {% for route in ALERTMANAGER_ADDITIONAL_ROUTES %}
-  - receiver: route.receiver
+  - receiver: {{ route.receiver }}
     matcher:
 {% for matcher in route.matchers %}
     - {{ matcher.label }}{{ matcher.condition }}"{{ matcher.value }}"
